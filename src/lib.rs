@@ -7,9 +7,21 @@ pub extern crate ufmt;
 
 pub use ufmt::{uDebug, uDisplay, uWrite, uwrite, uwriteln};
 
-#[cfg_attr(all(windows, target_env="msvc"), link(name="legacy_stdio_definitions", kind="dylib"))]
-extern "C" {
-    fn printf(fmt: *const i8, ...) -> i32;
+#[cfg(windows)]
+extern "system" {
+    fn SetConsoleOutputCP(wCodePageID: u32) -> i32;
+}
+
+///Initializes runtime, when necessary.
+///
+///On windows it calls `SetConsoleOutputCP(65001)` to enable unicode output
+pub fn init() {
+    #[cfg(windows)]
+    {
+        unsafe {
+            SetConsoleOutputCP(65001);
+        }
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -17,16 +29,15 @@ extern "C" {
 pub struct Stdout;
 
 impl ufmt::uWrite for Stdout {
-    type Error = i32;
+    type Error = ();
 
     fn write_str(&mut self, text: &str) -> Result<(), Self::Error> {
-        //TODO: how the fuck to avoid allocating and append 0?
-        let ret = unsafe {
-            printf("%s\0".as_ptr() as *const i8, text.as_ptr() as *const i8)
+        let result = unsafe {
+            libc::write(1, text.as_ptr() as *const _, text.len() as _)
         };
 
-        if ret < 0 {
-            Err(ret)
+        if result < 0 {
+            Err(())
         } else {
             Ok(())
         }

@@ -13,3 +13,4 @@ include = [
 
 [dependencies]
 ufmt = "0.1"
+libc = "0.2"
