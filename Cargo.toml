@@ -1,11 +1,12 @@
 [package]
 name = "ufmt-stdio"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Douman <douman@gmx.se>"]
 description = "C stdio writer for ufmt"
 edition = "2018"
 license = "BSL-1.0"
 repository = "https://github.com/DoumanAsh/ufmt-stdio"
+readme = "README.md"
 include = [
     "**/*.rs",
     "Cargo.toml",
@@ -14,4 +15,4 @@ include = [
 
 [dependencies]
 ufmt = "0.1"
-libc = "0.2"
+libc = { version = "0.2", default-features = false }
