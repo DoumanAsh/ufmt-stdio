@@ -2,6 +2,7 @@
 name = "ufmt-stdio"
 version = "0.1.0"
 authors = ["Douman <douman@gmx.se>"]
+description = "C stdio writer for ufmt"
 edition = "2018"
 license = "BSL-1.0"
 repository = "https://github.com/DoumanAsh/ufmt-stdio"
