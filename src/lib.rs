@@ -44,6 +44,26 @@ impl ufmt::uWrite for Stdout {
     }
 }
 
+#[derive(Copy, Clone)]
+///Stderr wrapper
+pub struct Stderr;
+
+impl ufmt::uWrite for Stderr {
+    type Error = ();
+
+    fn write_str(&mut self, text: &str) -> Result<(), Self::Error> {
+        let result = unsafe {
+            libc::write(2, text.as_ptr() as *const _, text.len() as _)
+        };
+
+        if result < 0 {
+            Err(())
+        } else {
+            Ok(())
+        }
+    }
+}
+
 ///Prints to the stdout with newline
 #[macro_export]
 macro_rules! println {
@@ -60,5 +80,61 @@ macro_rules! println {
 macro_rules! print {
     ($($arg:tt)*) => {
         let _ = $crate::ufmt::uwrite!($crate::Stdout, $($arg)*);
+    };
+}
+
+///Prints to the stderr with newline
+#[macro_export]
+macro_rules! eprintln {
+    () => {
+        let _ = $crate::ufmt::uwrite!($crate::Stderr, "\n");
+    };
+    ($($arg:tt)*) => {
+        let _ = $crate::ufmt::uwriteln!($crate::Stderr, $($arg)*);
+    };
+}
+
+///Prints to the stderr
+#[macro_export]
+macro_rules! eprint {
+    ($($arg:tt)*) => {
+        let _ = $crate::ufmt::uwrite!($crate::Stderr, $($arg)*);
+    };
+}
+
+///Prints to the stdout with newline in debug mode only
+#[cfg(debug_assertions)]
+#[macro_export]
+macro_rules! d_println {
+    () => {
+        let _ = $crate::ufmt::uwrite!($crate::Stdout, "\n");
+    };
+    ($($arg:tt)*) => {
+        let _ = $crate::ufmt::uwriteln!($crate::Stdout, $($arg)*);
+    };
+}
+
+///Prints to the stdout in debug mode only
+#[cfg(debug_assertions)]
+#[macro_export]
+macro_rules! d_print {
+    ($($arg:tt)*) => {
+        let _ = $crate::ufmt::uwrite!($crate::Stdout, $($arg)*);
+    };
+}
+
+///Prints to the stdout with newline in debug mode only
+#[cfg(not(debug_assertions))]
+#[macro_export]
+macro_rules! d_println {
+    ($($arg:tt)*) => {
+    };
+}
+
+///Prints to the stdout in debug mode only
+#[cfg(not(debug_assertions))]
+#[macro_export]
+macro_rules! d_print {
+    ($($arg:tt)*) => {
     };
 }
