@@ -1,6 +1,6 @@
 [package]
 name = "ufmt-stdio"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Douman <douman@gmx.se>"]
 description = "C stdio writer for ufmt"
 edition = "2018"

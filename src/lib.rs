@@ -24,32 +24,26 @@ pub fn init() {
     }
 }
 
-#[derive(Copy, Clone)]
-///Stdout wrapper
-pub struct Stdout;
-
-#[derive(Copy, Clone)]
-///Stderr wrapper
-pub struct Stderr;
-
 mod imp;
+pub use imp::{Stdout, Stderr};
 
 ///Prints to the stdout with newline
 #[macro_export]
 macro_rules! println {
     () => {
-        let _ = $crate::ufmt::uwrite!($crate::Stdout, "\n");
+        let _ = $crate::ufmt::uwrite!($crate::Stdout::new(), "\n");
     };
     ($($arg:tt)*) => {
-        let _ = $crate::ufmt::uwriteln!($crate::Stdout, $($arg)*);
+        let _ = $crate::ufmt::uwriteln!($crate::Stdout::new(), $($arg)*);
     };
 }
 
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
 ///Prints to the stdout
 #[macro_export]
 macro_rules! print {
     ($($arg:tt)*) => {
-        let _ = $crate::ufmt::uwrite!($crate::Stdout, $($arg)*);
+        let _ = $crate::ufmt::uwrite!($crate::Stdout::new(), $($arg)*);
     };
 }
 
@@ -57,18 +51,19 @@ macro_rules! print {
 #[macro_export]
 macro_rules! eprintln {
     () => {
-        let _ = $crate::ufmt::uwrite!($crate::Stderr, "\n");
+        let _ = $crate::ufmt::uwrite!($crate::Stderr::new(), "\n");
     };
     ($($arg:tt)*) => {
-        let _ = $crate::ufmt::uwriteln!($crate::Stderr, $($arg)*);
+        let _ = $crate::ufmt::uwriteln!($crate::Stderr::new(), $($arg)*);
     };
 }
 
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
 ///Prints to the stderr
 #[macro_export]
 macro_rules! eprint {
     ($($arg:tt)*) => {
-        let _ = $crate::ufmt::uwrite!($crate::Stderr, $($arg)*);
+        let _ = $crate::ufmt::uwrite!($crate::Stderr::new(), $($arg)*);
     };
 }
 
@@ -77,19 +72,20 @@ macro_rules! eprint {
 #[macro_export]
 macro_rules! d_println {
     () => {
-        let _ = $crate::ufmt::uwrite!($crate::Stdout, "\n");
+        let _ = $crate::ufmt::uwrite!($crate::Stdout::new(), "\n");
     };
     ($($arg:tt)*) => {
-        let _ = $crate::ufmt::uwriteln!($crate::Stdout, $($arg)*);
+        let _ = $crate::ufmt::uwriteln!($crate::Stdout::new(), $($arg)*);
     };
 }
 
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
 ///Prints to the stdout in debug mode only
 #[cfg(debug_assertions)]
 #[macro_export]
 macro_rules! d_print {
     ($($arg:tt)*) => {
-        let _ = $crate::ufmt::uwrite!($crate::Stdout, $($arg)*);
+        let _ = $crate::ufmt::uwrite!($crate::Stdout::new(), $($arg)*);
     };
 }
 
@@ -101,6 +97,7 @@ macro_rules! d_println {
     };
 }
 
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
 ///Prints to the stdout in debug mode only
 #[cfg(not(debug_assertions))]
 #[macro_export]

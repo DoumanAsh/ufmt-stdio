@@ -1,4 +1,26 @@
-use crate::{Stdout, Stderr};
+///Stdout wrapper
+pub struct Stdout {
+}
+
+impl Stdout {
+    ///Creates new instance;
+    pub const fn new() -> Self {
+        Self {
+        }
+    }
+}
+
+///Stderr wrapper
+pub struct Stderr {
+}
+
+impl Stderr {
+    ///Creates new instance;
+    pub const fn new() -> Self {
+        Self {
+        }
+    }
+}
 
 impl ufmt::uWrite for Stdout {
     type Error = ();
