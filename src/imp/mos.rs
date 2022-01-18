@@ -23,9 +23,11 @@ impl Stderr {
 }
 
 extern "C" {
+    /// provided by https://github.com/llvm-mos/llvm-mos-sdk
     fn putchar(c: u8);
 }
 
+#[inline(always)]
 fn write(text: &str) {
     text.bytes().for_each(|b| unsafe { putchar(b) });
 }
