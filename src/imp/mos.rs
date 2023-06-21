@@ -3,6 +3,7 @@ pub struct Stdout {
 }
 
 impl Stdout {
+    #[inline(always)]
     ///Creates new instance;
     pub const fn new() -> Self {
         Self {
@@ -15,6 +16,7 @@ pub struct Stderr {
 }
 
 impl Stderr {
+    #[inline(always)]
     ///Creates new instance;
     pub const fn new() -> Self {
         Self {
@@ -35,6 +37,7 @@ fn write(text: &str) {
 impl ufmt::uWrite for Stdout {
     type Error = ();
 
+    #[inline(always)]
     fn write_str(&mut self, text: &str) -> Result<(), Self::Error> {
         write(text);
         Ok(())
@@ -44,6 +47,7 @@ impl ufmt::uWrite for Stdout {
 impl ufmt::uWrite for Stderr {
     type Error = ();
 
+    #[inline(always)]
     fn write_str(&mut self, text: &str) -> Result<(), Self::Error> {
         write(text);
         Ok(())

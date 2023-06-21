@@ -1,6 +1,6 @@
 [package]
 name = "ufmt-stdio"
-version = "0.3.0"
+version = "0.4.0"
 authors = ["Douman <douman@gmx.se>"]
 description = "C stdio writer for ufmt"
 edition = "2018"
@@ -12,12 +12,23 @@ include = [
     "Cargo.toml",
     "README.md"
 ]
+categories = ["embedded", "no-std"]
+keywords = ["stdio", "esp", "esp32", "wasm"]
 
 [dependencies]
 ufmt = "0.2"
 
-[target.'cfg(not(all(target_arch = "wasm32", target_os = "unknown")))'.dependencies]
-libc = { version = "0.2", default-features = false }
+[target.'cfg(not(any(target_arch = "riscv32", all(target_arch = "wasm32", target_os = "unknown"), target_arch="mos")))'.dependencies.libc]
+version = "0.2"
+default-features = false
 
 [target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
 wasm-bindgen = "0.2"
+
+[target.'cfg(target_arch = "riscv32")'.dependencies.critical-section]
+version = "1"
+optional = true
+
+[features]
+esp-uart = ["critical-section"]
+esp-jtag = ["critical-section"]
